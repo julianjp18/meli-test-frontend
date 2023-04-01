@@ -6,7 +6,8 @@ const MAIN_URL = import.meta.env.VITE_BACKEND_URL;
 const FakeStoreService = {
     getProducts: async (queryParam = ':query'): Promise<ServiceI> => {
       try {
-        const response = await get(`${MAIN_URL}items?q=${queryParam}`);
+        const params = new URLSearchParams({ q: queryParam });
+        const response = await get(`${MAIN_URL}items?${params}`);
         return {
             data: response.items,
             statusCode: 200,

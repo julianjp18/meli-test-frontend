@@ -8,57 +8,56 @@ import FakeStoreService from "../../services/FakeStoreService/FakeStoreService";
 import { ProductI } from "../../services/FakeStoreService/FakeStoreService.utils";
 
 import './ProductSearchList.scss';
+import ElementsNotFound from "../../components/Organisms/ElementsNotFound/ElementsNotFound";
 
 const INIT_BREADCRUMB = [{
     text: 'Resultado Búsqueda',
 }];
 
-function useQuery() {
-    const { search } = useLocation();
-    return React.useMemo(() => new URLSearchParams(search), [search]);
-}
-
 const ProductSearchList = () => {
-    let query = useQuery();
+    const { search } = useLocation();
+    const [loading, setLoading] = useState(true);
+    const [query, setQuery] = useState(new URLSearchParams(search));
     const [breadcrumb, setBreadcrumb] = useState(INIT_BREADCRUMB);
-    const [productsList, setProductsList] = useState<ProductI[]>([]);
     const [productToShow, setProductToShow] = useState<ProductI[]>([]);
     
     useEffect(() => {
-        if (productsList.length === 0) {
-            getProductsList();
-        } 
-    }, []);
+        const params = new URLSearchParams(search);
+        setQuery(params);
+        getProductsList(params || ':query' || '');
+    }, [search]);
     
-    const findProductsBySearch = (query: string, products: ProductI[]) => {
+    const findProductsBySearch = (queryToFind: string, products: ProductI[]) => {
         const result: any[] = [];
         if (products.length > 0) {
             products.forEach((product: ProductI) => {
-                if (product.title.toLocaleLowerCase().includes(query.toLocaleLowerCase())) {
+                if (product.title.toLocaleLowerCase().includes(queryToFind.toLocaleLowerCase())) {
                     result.push(product);
                 }
             });
         }
         setBreadcrumb([
             ...INIT_BREADCRUMB,
-            { text: query }
+            { text: `${query.get('search')}` }
         ]);
         return result.slice(0, 4);
     }
 
-    const getProductsList = async () => {
-        const response = await FakeStoreService.getProducts();
+    const getProductsList = async (params: any) => {
+        setLoading(true);
+        const value = params === ':query' ? ':query' : params.get('search');
+        const response = await FakeStoreService.getProducts(value);
         if (response.statusCode === 200 && response.data) {
-            setProductsList(response.data);
-            setProductToShow(findProductsBySearch(query.get('search') || '', response.data));
+            setProductToShow(findProductsBySearch(value, response.data));
         }
+        setLoading(false);
     }
 
     return (
         <App>
             <Breadcrumb items={breadcrumb} />
             {productToShow.length > 0
-                ? <ProductsList products={productToShow} /> : <Skeleton active />}
+                ? <ProductsList products={productToShow} /> : loading ? <Skeleton active /> : <ElementsNotFound />}
         </App>
     );
 };

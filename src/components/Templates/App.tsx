@@ -11,7 +11,6 @@ interface AppInterface {
 const App = ({ children }: AppInterface) => {
     const navigate = useNavigate();
     const [productsList, setProductsList] = useState<ProductI[]>([]);
-    const [productToShow, setProductToShow] = useState<ProductI[]>([]);
     
     useEffect(() => {
         if (productsList.length === 0) {
@@ -32,19 +31,9 @@ const App = ({ children }: AppInterface) => {
         }
     };
 
-    const searchOnSelect = async (value: string) => {
-        if (value) {
-            const productId = value.split('--')[0];
-            const response = await FakeStoreService.getProductById(productId);
-            if (response.statusCode === 200 && response.data) {
-                setProductToShow(response.data);
-            }
-        }
-    };
-
     return (
         <React.Fragment>
-            <Navbar productsList={productsList} searchOnSelect={searchOnSelect} searchOnClick={searchOnClick} />
+            <Navbar productsList={productsList} searchOnClick={searchOnClick} />
             <main>
                 {children}
             </main>

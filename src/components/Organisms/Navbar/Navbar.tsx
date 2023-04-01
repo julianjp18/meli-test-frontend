@@ -8,9 +8,8 @@ import './Navbar.scss';
 interface NavbarI {
     productsList: ProductI[];
     searchOnClick: (value: string) => void;
-    searchOnSelect: (value: string) => void;
 }
-const Navbar = ({ productsList, searchOnSelect, searchOnClick }: NavbarI) => {
+const Navbar = ({ productsList, searchOnClick }: NavbarI) => {
     const navigate = useNavigate();
     const searchResult = (query: string) => {
         const result: any[] = [];
@@ -47,7 +46,7 @@ const Navbar = ({ productsList, searchOnSelect, searchOnClick }: NavbarI) => {
                     <img className="navbar-logo" src={Logo} alt="Test MercadoLibre logo, Academic purpose only" />
                 </Link>
                 <div className="navbar-search-bar">
-                    <InputSearch searchResult={searchResult} onSelect={searchOnSelect} onClick={searchOnClick} />
+                    <InputSearch searchResult={searchResult} onClick={searchOnClick} />
                 </div>
             </div>
         </header>

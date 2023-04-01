@@ -7,7 +7,7 @@ This project is created with love by Vite.
 
 ## This project includes:
 - Search product input box (/). Include it in every route.
-- Search results view (/items?q=:query).
+- Search results view (/items?search=:query).
 - Product detail view (/items/:id)
 
 ## Folders:

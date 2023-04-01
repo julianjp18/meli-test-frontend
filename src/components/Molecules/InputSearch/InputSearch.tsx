@@ -7,17 +7,12 @@ import './InputSearch.scss';
 interface InputSearchI {
     searchResult: (value: string) => any[];
     onClick: (value: string) => void;
-    onSelect: (value: string) => void;
 }
-const InputSearch = ({ searchResult, onClick, onSelect }: InputSearchI) => {
+const InputSearch = ({ searchResult, onClick }: InputSearchI) => {
   const [options, setOptions] = useState<SelectProps<object>['options']>([]);
 
   const handleSearch = (value: string) => {
       setOptions(value ? searchResult(value) : []);
-  };
-
-  const handleSelect = (value: string) => {
-    onSelect(value);
   };
 
   const inputOnSearch = (value: string) => {
@@ -29,7 +24,6 @@ const InputSearch = ({ searchResult, onClick, onSelect }: InputSearchI) => {
       dropdownMatchSelectWidth={252}
       className="autocomplete"
       options={options}
-      onSelect={handleSelect}
       onSearch={handleSearch}
     >
       <Input.Search size="large" placeholder="Nunca dejes de buscar..." onSearch={inputOnSearch} />

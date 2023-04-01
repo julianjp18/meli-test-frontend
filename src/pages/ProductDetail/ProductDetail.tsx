@@ -17,22 +17,11 @@ const INIT_BREADCRUMB = [{
 const ProductDetail = () => {
     let { id } = useParams();
     const [breadcrumb, setBreadcrumb] = useState(INIT_BREADCRUMB);
-    const [productsList, setProductsList] = useState<ProductI[]>([]);
     const [productToShow, setProductToShow] = useState<ProductI>();
     const navigate = useNavigate();
     useEffect(() => {
-        if (productsList.length === 0) {
-            getProductsList();
-        }
         if (id) getProductById();
     }, []);
-
-    const getProductsList = async () => {
-        const response = await FakeStoreService.getProducts();
-        if (response.statusCode === 200 && response.data) {
-            setProductsList(response.data);
-        }
-    }
 
     const getProductById = async () => {
         if (id) {
